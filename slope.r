@@ -1,0 +1,7 @@
+Slope <- function(tser, n){
+  
+  
+  
+  
+  
+}
