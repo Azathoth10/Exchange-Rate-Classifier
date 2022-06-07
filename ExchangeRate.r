@@ -26,10 +26,10 @@ df$MACD <- df$EWM_FAST - df$EWM_SLOW
 df$signal <- movavg(df$MACD , n=9, type='e')
 df$diffMACD <- df$MACD - df$signal
 
-n = 5
+n = 10
 dfr <- data.frame(df$Close)
 coeffic <- c()
-x <- c(1:5)
+x <- c(1:n)
 
 for(i in c((n+1):(nrow(df)+1))){
   
