@@ -1,14 +1,17 @@
 source("GetTickers.r")
+source("gettick.r")
 source("rets.r")
 source('slope.r')
 library(dplyr)
 library(pracma)
 
-TKs <- c("GBPUSD=x")
+TK <- c("GBPUSD=x")
 
-start <- c("2014-01-01")
+start <- c("2000-01-01")
 
-df <- GetTS(TKs, start)
+df <- GetT(TK, start)
+
+df[]
 
 df <- na.omit(df)
 sum(is.na(df))
@@ -20,29 +23,37 @@ df <- Calc_rets(df)
 
 colnames(df) <- c("Close", "Rets")
 
-df$EWM_FAST <- movavg(df$Close , n=12, type='e')
-df$EWM_SLOW <- movavg(df$Close , n=26, type='e')
+df$EWM_FAST <- movavg(df$Close , n<-12, type='e')
+df <- tail(df, -n)
+df$EWM_SLOW <- movavg(df$Close , n<-26, type='e')
+df <- tail(df, -n)
 df$MACD <- df$EWM_FAST - df$EWM_SLOW
-df$signal <- movavg(df$MACD , n=9, type='e')
+df$signal <- movavg(df$MACD , n<-9, type='e')
+df <- tail(df, -n)
 df$diffMACD <- df$MACD - df$signal
 
-n = 10
-dfr <- data.frame(df$Close)
-coeffic <- c()
-x <- c(1:n)
+df$EMA_10 <- movavg(df$MACD , n<-10, type='e')
+df <- tail(df, -n)
+df$EMA_20 <- movavg(df$MACD , n<-20, type='e')
+df <- tail(df, -n)
+df$EMA_50 <- movavg(df$MACD , n<-50, type='e')
+df <- tail(df, -n)
 
-for(i in c((n+1):(nrow(df)+1))){
-  
-  y <- dfr[((i-n):(i-1)),]
-  summ <- summary(lm(y~x))
-  coeff <- summ$coefficients
-  m <- coeff[2,1]
-  
-  coeffic <- c(coeffic, m)
-  
-}
+df$SMA_10 <- movavg(df$MACD , n<-10, type='s')
+df <- tail(df, -n)
+df$SMA_20 <- movavg(df$MACD , n<-20, type='s')
+df <- tail(df, -n)
+df$SMA_50 <- movavg(df$MACD , n<-50, type='s')
+df <- tail(df, -n)
 
-angles <- atan(coeffic)
-df <- tail(df, -(n-1))
-df$slopes <- angles
+
+n = 5
+
+dfClose <- data.frame(df$Close)
+dfMACD <- data.frame(df$diffMACD)
+
+df <- Slopecalc(df, dfClose, n)
+df <- Slopecalc(df, dfMACD, n)
+
+
 

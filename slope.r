@@ -1,25 +1,31 @@
 Slopecalc <- function(df, tser, n){
   
-  coeffic <- c()
-  dff <- data.frame(tser)
-  x <- c(1:n)
-  for(i in c((n+1):(nrow(dff)+1))){
+  if(is.data.frame(tser) == "FALSE"){
     
-    y <- as.numeric(dff[(i-n):(i-1),])
-    cff <- as.numeric(as.matrix(summary(lm(y~x))$coefficients)[2,1])
-    coeffic <- c(coeffic, cff)
-    
-    print(cff)
-    
-    
-  df <- tail(df, -(n-1))
-  angles <- atan(coeffic)
-  df$slopes <- coeffic
+    print("No good, Your time series should be a dataframe. Transform it!")
   
-  return(df)
-
+  }
+  
+  coeffic <- c()
+  x <- c(1:n)
+  
+  for(i in c((n+1):(nrow(df)+1))){
+    
+    y <- tser[((i-n):(i-1)),]
+    summ <- summary(lm(y~x))
+    coeff <- summ$coefficients
+    m <- coeff[2,1]
+    
+    coeffic <- c(coeffic, m)
     
   }
   
-}
+  angles <- atan(coeffic)
+  df <- tail(df, -(n-1))
+  df$slopes <- angles
+  
+  return(df)
+    
+  }
+
 
