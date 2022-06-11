@@ -21,10 +21,7 @@ Slopecalc <- function(df, tser, n){
   }
   
   angles <- atan(coeffic)
-  df <- tail(df, -(n-1))
-  df$slopes <- angles
-  
-  return(df)
+  return(angles)
     
   }
 

@@ -32,7 +32,7 @@ head(df)
 
 ATRdf <- ATR(df[,c("High","Low","Close")], n=14)
 ATRdf <- data.frame(ATRdf)
-ATRdf <- ATRdf$atr
+ATRdf <- data.frame(ATRdf$atr)
 naatr <- sum(is.na(ATRdf[1]))
 ATRdf <- na.omit(ATRdf)
 ATRdf <- data.frame(ATRdf)
@@ -70,8 +70,12 @@ n = 5
 
 dfMACD <- data.frame(df$diffMACD)
 
-df <- Slopecalc(df, dfClose, n)
-df <- Slopecalc(df, dfMACD, n)
+anglesClose <- Slopecalc(df, dfClose, n)
+anglesMACD <- Slopecalc(df, dfMACD, n)
 
+df <- tail(df, -(n-1))
+df$slopeClose <- anglesClose
+df$slopeMACD <- anglesMACD
 
+nrow(df)
 
