@@ -9,19 +9,38 @@ TK <- c("GBPUSD=x")
 
 start <- c("2000-01-01")
 
-df <- GetT(TK, start)
+colsIlike <- c("GBPUSD.X.High","GBPUSD.X.Low", "GBPUSD.X.Close")
 
-df[]
+df <- GetT(TK, start)
+df <- df[, colsIlike]
 
 df <- na.omit(df)
 sum(is.na(df))
 nrow(df)
 
+dfClose <- data.frame(df$GBPUSD.X.Close)
+df <- tail(df, -1)
+
 sum(is.na(df[1]))
 
-df <- Calc_rets(df)
+dfr <- Calc_rets(dfClose)
+df$Rets <- dfr$df.GBPUSD.X.Close
 
-colnames(df) <- c("Close", "Rets")
+colnames(df) <- c("High", "Low", "Close","Rets")
+head(df)
+
+
+ATRdf <- ATR(df[,c("High","Low","Close")], n=14)
+ATRdf <- data.frame(ATRdf)
+ATRdf <- ATRdf$atr
+naatr <- sum(is.na(ATRdf[1]))
+ATRdf <- na.omit(ATRdf)
+ATRdf <- data.frame(ATRdf)
+
+df <- tail(df, -naatr)
+
+df$ATR <- ATRdf$ATRdf
+
 
 df$EWM_FAST <- movavg(df$Close , n<-12, type='e')
 df <- tail(df, -n)
@@ -49,7 +68,6 @@ df <- tail(df, -n)
 
 n = 5
 
-dfClose <- data.frame(df$Close)
 dfMACD <- data.frame(df$diffMACD)
 
 df <- Slopecalc(df, dfClose, n)
