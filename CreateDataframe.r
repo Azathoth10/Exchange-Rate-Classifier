@@ -77,5 +77,49 @@ df <- tail(df, -(n-1))
 df$slopeClose <- anglesClose
 df$slopeMACD <- anglesMACD
 
+ADXdf <- data.frame(ADX(as.matrix(df[,c("High","Low","Close")]), n=14))
+df$ADX <- ADXdf$ADX
+df <- na.omit(df)
+
+RSIdf <- data.frame(RSI(df$Close,14))
+df$RSI <- RSIdf$RSI.df.Close..14.
+df <- na.omit(df)
+
+
+WPRdf <- data.frame(WPR(as.matrix(df[,c("High","Low","Close")]), 14))
+df$WPR <- WPRdf$x
+df <- na.omit(df)
+
+a <- df$Close - df$Low
+b <- df$High - df$Low
+ab <- data.frame(a/b)
+colnames(ab) <- "Stoch"
+df$Stoch <- ab$Stoch
+
+bin <- c()
+
+for(i in c(1:nrow(df))){
+  if(df$Rets[i] > 0){
+    bval <- 1
+  }else{
+    bval <- 0
+  }
+  bin <- c(bin, bval)
+}
+
+df$BinaryRets <- bin
+
+dfbin_1 <- head(df$BinaryRets,-1)
+dfbin_1 <- c(NA, dfbin_1)
+df$BinaryRets_1 <- dfbin_1
+df <- na.omit(df)
+
+shift <- function(x, n){
+  c(x[-(seq(n))], rep(NA, n))
+}
+
+df$label <- shift(df$BinaryRets, 1)
+
 nrow(df)
 View(df)
+
