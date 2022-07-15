@@ -30,7 +30,7 @@ colnames(df) <- c("High", "Low", "Close","Rets")
 head(df)
 
 
-ATRdf <- ATR(df[,c("High","Low","Close")], n=14)
+ATRdf <- ATR(as.matrix(df[,c("High","Low","Close")]), n=14)
 ATRdf <- data.frame(ATRdf)
 ATRdf <- data.frame(ATRdf$atr)
 naatr <- sum(is.na(ATRdf[1]))
@@ -78,4 +78,4 @@ df$slopeClose <- anglesClose
 df$slopeMACD <- anglesMACD
 
 nrow(df)
-
+View(df)
