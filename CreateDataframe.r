@@ -112,6 +112,11 @@ df$BinaryRets <- bin
 dfbin_1 <- head(df$BinaryRets,-1)
 dfbin_1 <- c(NA, dfbin_1)
 df$BinaryRets_1 <- dfbin_1
+#df <- na.omit(df)
+
+dfbin_2 <- head(df$BinaryRets,-2)
+dfbin_2 <- c(NA,NA, dfbin_2)
+df$BinaryRets_2 <- dfbin_2
 df <- na.omit(df)
 
 shift <- function(x, n){
