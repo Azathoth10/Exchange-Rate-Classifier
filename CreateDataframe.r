@@ -125,6 +125,4 @@ shift <- function(x, n){
 
 df$label <- shift(df$BinaryRets, 1)
 
-nrow(df)
-View(df)
-
+write.csv(df, "DataframeEUR_USD.csv")
